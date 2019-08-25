@@ -51,6 +51,7 @@ public class GameManager : MonoBehaviour
   public void AddItem(string item)
   {
     currentRecepy.Add(item);
+    Debug.Log("Add: " + item);
     CheckRecepy();
   }
 
@@ -72,6 +73,7 @@ public class GameManager : MonoBehaviour
       if (recepy.resources.Count != currentRecepy.Count)
         return;
 
+      found = true;
       foreach (string itm in currentRecepy) {
         if (recepy.resources.IndexOf(itm) < 0)
         {
