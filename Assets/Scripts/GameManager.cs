@@ -20,19 +20,48 @@ public class GameManager : MonoBehaviour
 {
   public static GameManager instance;
 
+  private static int points;
+  public static int Points
+  {
+    get
+    {
+      return points;
+    }
+    set
+    {
+      points = value;
+      instance.pointText.text = string.Format("Points: {0}", value);
+      if (points >= instance.winPoints)
+      {
+        instance.winPanel.SetActive(true);
+      }
+    }
+  }
+
+  public int winPoints = 2;
+
   public List<ResourceItem> itemList;
   public List<RecepyItem> recepyList;
 
   public ResultObject resultObject;
   public GameObject buttonOk;
   public List<DropObject> dropList;
+  public TMPro.TMP_Text pointText;
+
+  public GameObject startPanel;
+  public GameObject resumeButton;
+  public GameObject winPanel;
 
   internal readonly List<string> currentRecepy = new List<string>();
 
   private void Awake()
   {
     instance = this;
+    resumeButton.SetActive(false);
     buttonOk.SetActive(false);
+    startPanel.SetActive(true);
+    winPanel.SetActive(false);
+    Points = 0;
   }
 
   public void ClearRecepy()
@@ -51,7 +80,6 @@ public class GameManager : MonoBehaviour
   public void AddItem(string item)
   {
     currentRecepy.Add(item);
-    Debug.Log("Add: " + item);
     CheckRecepy();
   }
 
@@ -90,7 +118,14 @@ public class GameManager : MonoBehaviour
     }
 
     if (!found)
+    {
+      if (points > 0)
+      {
+        Points--;
+      }
+
       return;
+    }
 
     //TODO make new recepy item
     Debug.Log("Recepy found:" + result.result);
@@ -103,7 +138,40 @@ public class GameManager : MonoBehaviour
     resultObject.picture.sprite = rItem.sprite;
 
     buttonOk.SetActive(true);
+    Points++;
 
+  }
+
+  public void OnStartGame()
+  {
+    ClearRecepy();
+
+    buttonOk.SetActive(false);
+    Points = 0;
+
+    winPanel.SetActive(false);
+    startPanel.SetActive(false);
+  }
+  public void OnExitMainMenu()
+  {
+    resumeButton.SetActive(false);
+    winPanel.SetActive(false);
+    startPanel.SetActive(true);
+  }
+  public void OnExitMenu()
+  {
+    resumeButton.SetActive(true);
+
+    startPanel.SetActive(true);
+  }
+  public void OnResumeGame()
+  {
+    startPanel.SetActive(false);
+  }
+
+  public void OnExitGame()
+  {
+    Application.Quit();
   }
 
 }
