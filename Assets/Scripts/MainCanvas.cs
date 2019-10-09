@@ -30,11 +30,11 @@ public class MainCanvas : MonoBehaviour
     dragIcon.position = Input.mousePosition;
   }
 
-  public void OnDrop(DropObject target)
+  public void OnDrop(DropObject target, int listID)
   {
     target.itemName = currentDrag.itemName;
     target.sprite = currentDrag.picture.sprite;
-    GameManager.instance.AddItem(currentDrag.itemName);
+    GameManager.instance.AddItem(currentDrag.itemName, listID);
   }
 
   public void OnOkButton()

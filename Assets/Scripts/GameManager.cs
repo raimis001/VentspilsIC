@@ -77,15 +77,24 @@ public class GameManager : MonoBehaviour
     resultObject.itemName = "";
   }
 
-  public void AddItem(string item)
+  public void AddItem(string item, int listId)
   {
-    currentRecepy.Add(item);
+    if (currentRecepy.Count <= listId)
+      currentRecepy.Add(item);
+    else
+      currentRecepy[listId] = item;
+
     CheckRecepy();
   }
 
-  public void RemoveItem(string item)
+  public void RemoveItem(string item, int listId)
   {
-    currentRecepy.Remove(item);
+    if (currentRecepy.Count >= listId)
+      return;
+
+    currentRecepy.RemoveAt(listId);
+
+    //currentRecepy.Remove(item);
   }
 
 
@@ -101,13 +110,16 @@ public class GameManager : MonoBehaviour
       if (recepy.resources.Count != currentRecepy.Count)
         return;
 
+      List<string> checkList = new List<string>(recepy.resources);
+
       found = true;
       foreach (string itm in currentRecepy) {
-        if (recepy.resources.IndexOf(itm) < 0)
+        if (checkList.IndexOf(itm) < 0)
         {
           found = false;
           break;
         }
+        checkList.Remove(itm);
        }
 
       if (found)
